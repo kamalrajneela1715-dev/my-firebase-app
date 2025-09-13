@@ -1,0 +1,99 @@
+import { useState } from "react";
+import { BarChart2, Target, Settings, Home, ShoppingBag, Utensils, Tv } from "lucide-react";
+
+export default function Dashboard() {
+  const [user] = useState("User");
+
+  // Example budgets (you can fetch from Firebase/DB)
+  const budgets = [
+    { id: 1, category: "Groceries", spent: 0, limit: 400, icon: Utensils },
+    { id: 2, category: "Entertainment", spent: 0, limit: 150, icon: Tv },
+    { id: 3, category: "Shopping", spent: 0, limit: 500, icon: ShoppingBag },
+  ];
+
+  return (
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <aside className="w-64 bg-green-900 text-white flex flex-col justify-between">
+        <div>
+          <h1 className="text-2xl font-bold p-4">Fiscal Forecast</h1>
+          <nav className="mt-6">
+            <a className="flex items-center px-4 py-2 bg-green-800 rounded-lg" href="#">
+              <Home className="w-5 h-5 mr-2" /> Dashboard
+            </a>
+            <a className="flex items-center px-4 py-2 mt-2 hover:bg-green-800 rounded-lg" href="#">
+              <BarChart2 className="w-5 h-5 mr-2" /> Analytics <span className="ml-auto text-xs">SOON</span>
+            </a>
+            <a className="flex items-center px-4 py-2 mt-2 hover:bg-green-800 rounded-lg" href="#">
+              <Target className="w-5 h-5 mr-2" /> Goals
+            </a>
+            <a className="flex items-center px-4 py-2 mt-2 hover:bg-green-800 rounded-lg" href="#">
+              <Settings className="w-5 h-5 mr-2" /> Settings
+            </a>
+          </nav>
+        </div>
+        <div className="p-4 border-t border-green-700">
+          <p className="text-sm">{user}</p>
+          <p className="text-xs text-gray-300">kamalrajneela1715@gmail.com</p>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 overflow-y-auto">
+        {/* Financial Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-2xl shadow">
+            <h3 className="text-gray-500">Total Balance</h3>
+            <p className="text-2xl font-bold">₹12,200</p>
+            <p className="text-sm text-gray-400">Based on the last 12 months of data</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow">
+            <h3 className="text-gray-500">Total Income</h3>
+            <p className="text-2xl font-bold text-green-600">+ ₹66,600</p>
+            <p className="text-sm text-gray-400">Based on the last 12 months of data</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow">
+            <h3 className="text-gray-500">Total Spending</h3>
+            <p className="text-2xl font-bold text-red-600">- ₹54,400</p>
+            <p className="text-sm text-gray-400">Based on the last 12 months of data</p>
+          </div>
+        </div>
+
+        {/* Active Budgets */}
+        <div className="bg-white p-6 rounded-2xl shadow mt-6">
+          <h3 className="text-lg font-semibold text-gray-700">Active Budgets</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Your spending against your current budgets.
+          </p>
+
+          <div className="space-y-4">
+            {budgets.map((budget) => {
+              const percentage = budget.limit > 0 ? Math.round((budget.spent / budget.limit) * 100) : 0;
+              const Icon = budget.icon;
+
+              return (
+                <div key={budget.id}>
+                  <div className="flex justify-between items-center mb-1">
+                    <div className="flex items-center space-x-2">
+                      <Icon className="w-5 h-5 text-green-600" />
+                      <span className="font-medium">{budget.category}</span>
+                    </div>
+                    <span className="font-bold">{percentage}%</span>
+                  </div>
+                  {/* Progress Bar */}
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div
+                      className="bg-green-500 h-3 rounded-full"
+                      style={{ width: `${percentage}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">₹{budget.limit}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
